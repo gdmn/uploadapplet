@@ -23,6 +23,7 @@ public class JMPlayer {
                 System.out.println("> " + evt.getPropertyName() + ": " + evt.getNewValue());
             }
         });
+	}
 
     public void openResource(String resource) throws IOException {
         execute("loadfile \"" + (httpProxy == null || !resource.startsWith("http://") ? "" : "http_proxy://" + httpProxy + "/") + resource + "\" 0\n", "Starting playback...");

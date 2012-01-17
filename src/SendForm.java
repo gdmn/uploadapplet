@@ -243,21 +243,21 @@ public class SendForm extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					Object[] selectedValues = browser.getSelectedValues();
-					ArrayList<String> list = new ArrayList<String>(selectedValues.length);
+					ArrayList<Link> list = new ArrayList<Link>(selectedValues.length);
 					try {
 						if ((selectedValues.length == 1 && ((Link) selectedValues[0]).getName().equals("..")) || selectedValues.length == 0) {
 							MyBrowserListModel model = (MyBrowserListModel) browser.getModel();
 							for (int i = 0; i < model.getSize(); i++) {
 								Link link = (Link) model.getElementAt(i);
 								if (!link.getName().equals("..")) {
-									list.add(link.getUrl().toString());
+									list.add(link);
 								}
 							}
 						} else {
 							for (Object selected : selectedValues) {
 								Link link = (Link) selected;
 								if (!link.getName().equals("..")) {
-									list.add(link.getUrl().toString());
+									list.add(link);
 								}
 							}
 						}

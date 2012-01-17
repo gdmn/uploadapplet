@@ -19,10 +19,6 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author dmn
@@ -45,6 +41,7 @@ public class PlaylistForm extends JPanel {
             player = new JMPlayer(bin, args, proxy);
         } catch (IOException ex) {
             Logger.getLogger(PlaylistForm.class.getName()).log(Level.SEVERE, null, ex);
+			throw new RuntimeException(ex);
         }
 
         this.setLayout(new BorderLayout());
@@ -122,7 +119,7 @@ public class PlaylistForm extends JPanel {
 
     private void playNext() {
         int id = playingIndex + 1;
-        PlaylistListModel<String> model = (PlaylistListModel<String>) playlist.getModel();
+        PlaylistListModel<Link> model = (PlaylistListModel<Link>) playlist.getModel();
         if (model.getSize() < 1) {
             playingIndex = -1;
             pause = true;
@@ -136,7 +133,7 @@ public class PlaylistForm extends JPanel {
 
     private void playPrev() {
         int id = playingIndex - 1;
-        PlaylistListModel<String> model = (PlaylistListModel<String>) playlist.getModel();
+        PlaylistListModel<Link> model = (PlaylistListModel<Link>) playlist.getModel();
         if (model.getSize() < 1) {
             playingIndex = -1;
             pause = true;
@@ -150,9 +147,9 @@ public class PlaylistForm extends JPanel {
 
     private void play(int id) {
         try {
-            PlaylistListModel<String> model = (PlaylistListModel<String>) playlist.getModel();
-            String value = model.getElementAt(id);
-            player.openResource(value);
+            PlaylistListModel<Link> model = (PlaylistListModel<Link>) playlist.getModel();
+            Link value = model.getElementAt(id);
+            player.openResource(value.getUrl().toString());
             playingIndex = id;
             pause = false;
         } catch (IOException ex) {
@@ -246,9 +243,7 @@ public class PlaylistForm extends JPanel {
         });
     }
 
-    public void append(List<String> filelist) {
-        for (String value : filelist) {
-        }
+    public void append(List<Link> filelist) {
         ListModel model = new PlaylistListModel(filelist);
         playlist = new JList(model);
         final JScrollPane browserScrollPane = new JScrollPane(playlist);
