@@ -11,6 +11,7 @@ public class JMPlayer {
     //private static Logger logger = Logger.getLogger(JMPlayer.class.getName());
     private SystemProcessWrapper mplayerProcess;
 	private String httpProxy;
+	private String icyStreamTitle;
 
     public JMPlayer(String bin, String args, String httpProxy) throws IOException {
         //mplayerProcess = new SystemProcessWrapper("/usr/bin/mplayer", "-ao alsa -quiet -slave -idle");
@@ -20,7 +21,17 @@ public class JMPlayer {
 
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("> " + evt.getPropertyName() + ": " + evt.getNewValue());
+				String value = ""+evt.getNewValue();
+                System.out.println("> " + evt.getPropertyName() + ": " + value);
+				if (SystemProcessWrapper.STD_OUT.equals(evt.getPropertyName())) {
+					if (value.startsWith("ICY Info: StreamTitle")) {
+						int p = value.indexOf('\'');
+						int p2 = value.lastIndexOf('\'');
+						if (p > 0 && p2>p) {
+							icyStreamTitle = value.substring(p+1, p2);
+						}
+					}
+				}
             }
         });
 	}
@@ -76,6 +87,10 @@ public class JMPlayer {
     public void setVolume(float volume) {
         setProperty("volume", volume);
     }
+
+	public String getIcyStreamTitle() {
+		return icyStreamTitle;
+	}
 
     protected String getProperty(String name) {
         if (name == null || mplayerProcess == null) {
@@ -151,7 +166,7 @@ public class JMPlayer {
         final JMPlayer jmPlayer = new JMPlayer("/usr/bin/mplayer", "-ao alsa", null);
         // open a video file
 //        jmPlayer.open(new File("video.avi"));
-        final String filename = "http://localhost:54702/test.mp3";
+        final String filename = "http://localhost:8080/m/GTA.mp3";
         //jmPlayer.open(new File(filename));
         jmPlayer.openResource(filename);
         // skip 2 minutes

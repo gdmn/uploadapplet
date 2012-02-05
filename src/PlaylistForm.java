@@ -182,8 +182,11 @@ public class PlaylistForm extends JPanel {
                     if (player != null) {
                         if (player.isProcessSpawned()) {
                             if (!pause) {
-                                f = player.getPlayingFilename();
-                                f = f == null ? null : dec.decode(f, "UTF-8");
+								f = player.getIcyStreamTitle();
+								if (f == null) {
+									f = player.getPlayingFilename();
+									f = f == null ? null : dec.decode(f, "UTF-8");
+								}
                                 pos = player.getTimePosition();
                                 len = player.getTotalTime();
                                 s = "[" + (playingIndex + 1) + "/" + playlist.getModel().getSize() + "]"

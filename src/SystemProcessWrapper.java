@@ -1,4 +1,3 @@
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -22,6 +21,18 @@ public class SystemProcessWrapper {
     public static final String ERR_OUT = "err";
     public static final String STD_OUT = "std";
     private final Object listenerLock = new Object();
+	
+	public static void main(String[] args) throws IOException {
+		
+        SystemProcessWrapper proc = new SystemProcessWrapper("/usr/bin/soxi", "/home/dmn/mp3/song.mp3");
+		proc.addPropertyChangeListener(null,new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent pce) {
+				System.out.println(pce.getNewValue().toString());
+			}
+		});
+	}
 
     public SystemProcessWrapper(String processPath, String processOptions) throws IOException {
         if (processHandle == null) {

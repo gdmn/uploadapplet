@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * --downbtn y --upbtn y --upchange n --upsrv "http://127.0.0.1:11380" --mplayer "c:\progs\mplayer\mplayer.exe"
  */
 
 import java.awt.*;
@@ -236,6 +235,40 @@ public class SendForm extends JPanel {
 			}
 		});
 
+		JButton headButton = new JButton("Head");
+		headButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object[] selectedValues = browser.getSelectedValues();
+				try {
+					StringBuilder builder = new StringBuilder();
+					if ((selectedValues.length == 1 && ((Link) selectedValues[0]).getName().equals("..")) || selectedValues.length == 0) {
+						MyBrowserListModel model = (MyBrowserListModel) browser.getModel();
+						for (int i = 0; i < model.getSize(); i++) {
+							Link link = (Link) model.getElementAt(i);
+							if (!link.getName().equals("..")) {
+								builder.append(link.getUrl().toString()).append("\r\n");
+								builder.append(Browser.head(link.getUrl()));
+								builder.append("\r\n");
+							}
+						}
+					} else {
+						for (Object selected : selectedValues) {
+							Link link = (Link) selected;
+							if (!link.getName().equals("..")) {
+								builder.append(link.getUrl().toString()).append("\r\n");
+								builder.append(Browser.head(link.getUrl()));
+								builder.append("\r\n");
+							}
+						}
+					}
+					JOptionPane.showMessageDialog(content, builder.toString());
+				} finally {
+				}
+			}
+		});
+
 		JButton playBtn = new JButton("Play");
 		if (mplayer_bin != null) {
 			playBtn.addActionListener(new ActionListener() {
@@ -335,7 +368,7 @@ public class SendForm extends JPanel {
 			bottomPanel.add(downloadSelectedBtn);
 		}
 		if (browser != null) {
-			bottomPanel.add(playlistBtn);
+			bottomPanel.add(headButton);
 			if (mplayer_bin != null) {
 				bottomPanel.add(playBtn);
 			}
